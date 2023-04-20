@@ -1,0 +1,15 @@
+[global]
+  email_on_exception = false
+
+[server]
+  headless = true
+  enableCORS = false
+  enableXsrfProtection = false
+
+[theme]
+  primaryColor = "#2E7CFF" # Bright Blue
+  backgroundColor = "#1C1C1C" # Dark Gray
+  secondaryBackgroundColor = "#2A2A2A" # Slightly Lighter Gray
+  textColor = "#FFFFFF" # White
+  font = "sans-serif"
+  base = "dark"
