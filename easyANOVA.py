@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from scipy import stats
-import seaborn as sns
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.io as pio
 from io import BytesIO
 import base64
 
@@ -11,16 +11,13 @@ import base64
 st.set_page_config(
     page_title="ANOVA Analysis and Violin Plot Web App",
     page_icon=":bar_chart:",
-    layout="wide",
-    initial_sidebar_state="expanded",
+    layout="centered",
+    initial_sidebar_state="auto",
 )
 
 
-def plot_to_base64(plt):
-    buffer = BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+def plot_to_base64(fig):
+    img_base64 = base64.b64encode(pio.to_image(fig, format="png")).decode("utf-8")
     return img_base64
 
 
@@ -52,13 +49,10 @@ def main_app():
             else:
                 st.write("There is no statistically significant difference between the groups.")
 
-        if st.button("Plot violin plot"):
-            plt.figure(figsize=(12, 6))
-            sns.violinplot(x=group_col, y=value_col, data=df, inner="quartile")
-            plt.title("Violin Plot")
-            st.pyplot(plt.gcf())
+            fig = px.violin(df, x=group_col, y=value_col, box=True, points="all", title="Violin Plot")
+            st.plotly_chart(fig, use_container_width=True)
 
-            img_base64 = plot_to_base64(plt)
+            img_base64 = plot_to_base64(fig)
             st.download_button(
                 label="Download Violin Plot",
                 data=BytesIO(base64.b64decode(img_base64)),
@@ -107,28 +101,21 @@ def how_it_works():
         else:
             st.session_state.result = "There is no statistically significant difference between the groups."
         if "f_stat" in st.session_state:
-        	st.write(f"F-statistic: {st.session_state.f_stat}")
-        	st.write(f"P-value: {st.session_state.p_value}")
-        	st.write(st.session_state.result)
+            st.write(f"F-statistic: {st.session_state.f_stat}")
+            st.write(f"P-value: {st.session_state.p_value}")
+            st.write(st.session_state.result)
 
         # Plot the violin plot for the dummy data
-        plt.figure(figsize=(12, 6))
-        sns.violinplot(x=group_col, y=value_col, data=dummy_data, inner="quartile")
-        plt.title("Violin Plot")
-        st.pyplot(plt.gcf())
+        fig_dummy = px.violin(dummy_data, x=group_col, y=value_col, box=True, points="all", title="Violin Plot")
+        st.plotly_chart(fig_dummy)
 
-        img_base64 = plot_to_base64(plt)
+        img_base64_dummy = plot_to_base64(fig_dummy)
         st.download_button(
             label="Download Violin Plot",
-            data=BytesIO(base64.b64decode(img_base64)),
+            data=BytesIO(base64.b64decode(img_base64_dummy)),
             file_name="violin_plot_dummy_data.png",
             mime="image/png",
         )
-
-
-
-
-
 
 
 
