@@ -11,10 +11,9 @@ import base64
 st.set_page_config(
     page_title="ANOVA Analysis and Violin Plot Web App",
     page_icon=":bar_chart:",
-    layout="centered",
-    initial_sidebar_state="auto",
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
-
 
 def plot_to_base64(fig):
     img_base64 = base64.b64encode(pio.to_image(fig, format="png")).decode("utf-8")
@@ -50,6 +49,7 @@ def main_app():
                 st.write("There is no statistically significant difference between the groups.")
 
             fig = px.violin(df, x=group_col, y=value_col, box=True, points="all", title="Violin Plot")
+            fig.update_layout(autosize=True, margin=dict(l=0, r=0, t=30, b=0), width=None)
             st.plotly_chart(fig, use_container_width=True)
 
             img_base64 = plot_to_base64(fig)
@@ -59,6 +59,7 @@ def main_app():
                 file_name="violin_plot.png",
                 mime="image/png",
             )
+
 
 
 def how_it_works():
@@ -73,10 +74,10 @@ def how_it_works():
     st.write("Here's an example using the following dummy data:")
     dummy_data = pd.DataFrame({"Group": ["A"] * 5 + ["B"] * 5 + ["C"] * 5,
                                "Value": [10, 12, 9, 11, 13, 20, 21, 19, 18, 22, 30, 29, 31, 28, 32]})
-    
+
     if st.button("Load Dummy Data"):
         st.write(dummy_data)
-    
+
     st.write("The categorical column (Group) has three groups: A, B, and C.")
     st.write("The numerical column (Value) contains the values associated with each group.")
 
@@ -107,7 +108,8 @@ def how_it_works():
 
         # Plot the violin plot for the dummy data
         fig_dummy = px.violin(dummy_data, x=group_col, y=value_col, box=True, points="all", title="Violin Plot")
-        st.plotly_chart(fig_dummy)
+        fig_dummy.update_layout(autosize=True, margin=dict(l=0, r=0, t=30, b=0), width=None)
+        st.plotly_chart(fig_dummy, use_container_width=True)
 
         img_base64_dummy = plot_to_base64(fig_dummy)
         st.download_button(
@@ -119,6 +121,7 @@ def how_it_works():
 
 
 
+# Other imports and code remain the same
 
 # Create a navigation menu with the main app and the how_it_works page
 pages = {
@@ -126,11 +129,13 @@ pages = {
     "How it Works": how_it_works,
 }
 
-st.sidebar.title("")
-page = st.sidebar.radio("", list(pages.keys()))
+st.title("")  # Add an empty title to add some space at the top
+page = st.selectbox("", list(pages.keys()), key='page_select')  # Move the selectbox to the main content area
 
 # Display the selected page
 pages[page]()
+
+# Other code remains the same
 
 hide_st_style = """
             <style>
