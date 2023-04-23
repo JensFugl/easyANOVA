@@ -11,5 +11,5 @@
   backgroundColor = "#1C1C1C" # Dark Gray
   secondaryBackgroundColor = "#2A2A2A" # Slightly Lighter Gray
   textColor = "#FFFFFF" # White
-  font = "sans-serif"
+  font = "sans serif"
   base = "dark"
