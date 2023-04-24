@@ -14,9 +14,11 @@ def plot_to_base64(fig):
 def app():
     st.title("How it works")
 
-    dummy_data = pd.DataFrame({"Group": ["A"] * 5 + ["B"] * 5 + ["C"] * 5,
+    dummy_data = pd.DataFrame({"ThreeGroup": ["A"] * 5 + ["B"] * 5 + ["C"] * 5,
+                               "TwoGroup": ["X"] * 7 + ["Y"] * 8,
                                "DifferentValues": [10, 12, 9, 11, 13, 20, 21, 19, 18, 22, 30, 29, 31, 28, 32],
                                "SimilarValues": [5, 6, 5, 6, 7, 6, 5, 7, 6, 5, 7, 5, 6, 6, 7]})
+
 
     if st.button("Load Dummy Data"):
         st.session_state.data_loaded = True
