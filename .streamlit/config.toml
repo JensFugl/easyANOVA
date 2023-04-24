@@ -1,6 +1,3 @@
-[global]
-  email_on_exception = false
-
 [server]
   headless = true
   enableCORS = false
