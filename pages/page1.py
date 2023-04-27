@@ -19,20 +19,24 @@ def app():
                                "DifferentValues": [10, 12, 9, 11, 13, 20, 21, 19, 18, 22, 30, 29, 31, 28, 32],
                                "SimilarValues": [5, 6, 5, 6, 7, 6, 5, 7, 6, 5, 7, 5, 6, 6, 7]})
 
+    # Filter columns based on dtype
+    string_columns = dummy_data.select_dtypes(include=['object']).columns
+    numeric_columns = dummy_data.select_dtypes(include=[np.number]).columns
 
     if st.button("Load Dummy Data"):
         st.session_state.data_loaded = True
 
         if 'group_col' not in st.session_state:
-            st.session_state.group_col = dummy_data.columns[0]
+            st.session_state.group_col = string_columns[0]
 
         if 'value_col' not in st.session_state:
-            st.session_state.value_col = dummy_data.columns[1]
+            st.session_state.value_col = numeric_columns[0]
 
     if 'data_loaded' in st.session_state and st.session_state.data_loaded:
         st.write(dummy_data)
-        st.session_state.group_col = st.selectbox("Select the column for grouping (categorical):", dummy_data.columns, index=list(dummy_data.columns).index(st.session_state.group_col))
-        st.session_state.value_col = st.selectbox("Select the column for values (numerical):", dummy_data.columns, index=list(dummy_data.columns).index(st.session_state.value_col))
+
+        st.session_state.group_col = st.selectbox("Select the column for grouping (categorical):", string_columns, index=list(string_columns).index(st.session_state.group_col))
+        st.session_state.value_col = st.selectbox("Select the column for values (numerical):", numeric_columns, index=list(numeric_columns).index(st.session_state.value_col))
 
         if st.button("Perform ANOVA analysis for dummy data"):
             # Perform ANOVA analysis for the dummy data
