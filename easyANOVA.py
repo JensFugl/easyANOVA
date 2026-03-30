@@ -7,7 +7,6 @@ PAGES = {
     "App": page3,
 }
 
-
 st.set_page_config(
     page_title="easyANOVA",
     page_icon="📊",
@@ -15,41 +14,37 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Initialize session state variable if it doesn't exist
-if 'selection' not in st.session_state:
-    st.session_state.selection = 'Demo'
+if "selection" not in st.session_state:
+    st.session_state.selection = "Demo"
 
-# Create columns for radio buttons
-with st.container():
-    cols = st.columns(3)
+cols = st.columns(3)
+with cols[0]:
+    if st.button("Demo", use_container_width=True):
+        st.session_state.selection = "Demo"
+with cols[1]:
+    if st.button("About", use_container_width=True):
+        st.session_state.selection = "About"
+with cols[2]:
+    if st.button("App", use_container_width=True):
+        st.session_state.selection = "App"
 
-    with cols[0]:
-        if st.button("Demo"):
-            st.session_state.selection = "Demo"
+# Active page indicator
+st.markdown(
+    f"<p style='text-align:center; color: #2E7CFF; margin-top: -8px; font-size: 0.85rem;'>"
+    f"▲ {st.session_state.selection}</p>",
+    unsafe_allow_html=True,
+)
+st.divider()
 
-    with cols[1]:
-        if st.button("About"):
-            st.session_state.selection = "About"
+PAGES[st.session_state.selection].app()
 
-    with cols[2]:
-        if st.button("App"):
-            st.session_state.selection = "App"
-
-if st.session_state.selection:
-    page = PAGES.get(st.session_state.selection)
-    page.app()
-else:
-    st.header("Please select a page from the navigation ribbon above.")
-
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            .reportview-container .main .block-container {max-width: 100% !important;}
-            .css-17eq0hr {display: none !important;}
-            .css-1v3fvcr {margin-left: 0 !important;}
-            </style>
-            """
-
-st.markdown(hide_st_style, unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
